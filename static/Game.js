@@ -28,13 +28,19 @@ class Game {
             [2, 0, 2, 0, 2, 0, 2, 0],
             [0, 2, 0, 2, 0, 2, 0, 2]
         ];
-
-        this.scene = new THREE.Scene();
-        this.camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 10000);
+        
         this.renderer = new THREE.WebGLRenderer();
-        this.renderer.setClearColor("#3b3b3b");
+        this.renderer.setClearColor("#66bfff");  
         this.renderer.setSize(window.innerWidth, window.innerHeight);
         document.getElementById("root").append(this.renderer.domElement);
+        
+        this.scene = new THREE.Scene();
+
+        const loader = new THREE.TextureLoader();
+        const bgTexture = loader.load('./materials/skybox.jpg');
+        this.scene.background = bgTexture;
+
+        this.camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 10000);
         this.camera.position.set(0, 200, 0)
         this.camera.lookAt(this.scene.position);
 
@@ -105,14 +111,27 @@ class Game {
         this.color = color;
 
         if (this.color == "white") {
-            this.camera.position.set(-250, 200, 0)
+            this.moveCamera(-350, 200, 0);
         } else if (this.color == "black") {
-            this.camera.position.set(250, 200, 0)
+            this.moveCamera(350, 200, 0);
         } else {
-            this.camera.position.set(0, 300, 0)
+            this.moveCamera(0, 300, 0);
         }
+    }
 
-        this.camera.lookAt(this.scene.position);
+    moveCamera = (x, y, z) => {
+        new TWEEN.Tween(this.camera.position) // co
+            .to({ x: x, y: y, z: z }, 1500) // do jakiej pozycji, w jakim czasie
+            .easing(TWEEN.Easing.Cubic.In) // typ easingu (zmiana w czasie)
+            .onUpdate(() => { this.camera.lookAt(this.scene.position); })
+            .onComplete(() => { console.log("koniec animacji") }) // funkcja po zakończeniu animacji
+            .start()
+    }
+
+    onWindowResize = () => {
+        this.camera.aspect = window.innerWidth / window.innerHeight;
+        this.camera.updateProjectionMatrix();
+        this.renderer.setSize(window.innerWidth, window.innerHeight);
     }
 
     render = () => {
