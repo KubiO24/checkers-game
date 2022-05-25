@@ -6,6 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Checkers online</title> 
+    <script src="https://kit.fontawesome.com/f25033f0ac.js" crossorigin="anonymous"></script>
     <script src="./libs/tween.umd.js"></script>
     <script src="./libs/three.js"></script>
     <script src="./Game.js"></script>
@@ -78,9 +79,31 @@
 
         #login #loginError {
             font-family: 'Roboto', sans-serif;
-            font-size: 1rem;
-            color: red;
-            margin-top: 50px;
+            font-size: 1.1rem;
+            color: #fc1515;
+            margin-top: 10px;
+        }
+
+        #waitingScreen {
+            position: absolute;
+            left: 50%;
+            top: 200px;
+            transform: translate(-50%, 0);
+            display: none;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        #waitingScreen #waitingText {
+            font-family: 'Roboto', sans-serif;
+            font-size: 3rem;
+            color: white;
+            margin-bottom: 50px;
+        }
+
+        #waitingScreen i {
+            font-size: 100px;
+            color: white;
         }
     </style>
 </head>
@@ -93,9 +116,14 @@
         <input type="text" class="loginInput" placeholder="Username"/>  
 
         <button onClick="ui.login()">Log In</button>
-        <button>Reset</button>
+        <button onClick="net.resetUsers()">Reset</button>
 
         <span id="loginError"></span>
+    </div>
+
+    <div id="waitingScreen">
+        <h1 id="waitingText"></h1>
+        <i class="fa-solid fa-spinner fa-spin-pulse"></i>
     </div>
 </body>
 

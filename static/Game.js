@@ -32,7 +32,7 @@ class Game {
         this.scene = new THREE.Scene();
         this.camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 10000);
         this.renderer = new THREE.WebGLRenderer();
-        this.renderer.setClearColor(0x333333);
+        this.renderer.setClearColor("#3b3b3b");
         this.renderer.setSize(window.innerWidth, window.innerHeight);
         document.getElementById("root").append(this.renderer.domElement);
         this.camera.position.set(0, 200, 0)
@@ -101,6 +101,19 @@ class Game {
         this.scene.add(this.table)
     }
 
+    setColor = (color) => {
+        this.color = color;
+
+        if (this.color == "white") {
+            this.camera.position.set(-250, 200, 0)
+        } else if (this.color == "black") {
+            this.camera.position.set(250, 200, 0)
+        } else {
+            this.camera.position.set(0, 300, 0)
+        }
+
+        this.camera.lookAt(this.scene.position);
+    }
 
     render = () => {
         TWEEN.update();
