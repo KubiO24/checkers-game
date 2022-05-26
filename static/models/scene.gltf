@@ -1,0 +1,441 @@
+{
+  "accessors": [
+    {
+      "bufferView": 2,
+      "componentType": 5126,
+      "count": 2202,
+      "max": [
+        53.02027130126953,
+        75.28104400634766,
+        66.3440933227539
+      ],
+      "min": [
+        -85.99476623535156,
+        -91.6453857421875,
+        -67.23082733154297
+      ],
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 2,
+      "byteOffset": 26424,
+      "componentType": 5126,
+      "count": 2202,
+      "max": [
+        0.9999953508377075,
+        0.9998718500137329,
+        0.9989901781082153
+      ],
+      "min": [
+        -1.0,
+        -0.9998752474784851,
+        -0.9989901781082153
+      ],
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 3,
+      "componentType": 5126,
+      "count": 2202,
+      "max": [
+        0.9999232888221741,
+        0.9765294194221497,
+        0.9999903440475464,
+        1.0
+      ],
+      "min": [
+        -0.994974672794342,
+        -0.9998492002487183,
+        -0.9999997019767761,
+        -1.0
+      ],
+      "type": "VEC4"
+    },
+    {
+      "bufferView": 1,
+      "componentType": 5126,
+      "count": 2202,
+      "max": [
+        0.9820382595062256,
+        0.9813899993896484
+      ],
+      "min": [
+        0.02255856990814209,
+        0.023134469985961914
+      ],
+      "type": "VEC2"
+    },
+    {
+      "bufferView": 0,
+      "componentType": 5125,
+      "count": 11604,
+      "type": "SCALAR"
+    },
+    {
+      "bufferView": 2,
+      "byteOffset": 52848,
+      "componentType": 5126,
+      "count": 281,
+      "max": [
+        13.092069625854492,
+        97.19407653808594,
+        53.959842681884766
+      ],
+      "min": [
+        -13.092069625854492,
+        -7.7240447998046875,
+        -117.36105346679688
+      ],
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 2,
+      "byteOffset": 56220,
+      "componentType": 5126,
+      "count": 281,
+      "max": [
+        0.9796621799468994,
+        0.9583300352096558,
+        0.9228297472000122
+      ],
+      "min": [
+        -0.9796621799468994,
+        -0.8051761388778687,
+        -0.9995635747909546
+      ],
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 3,
+      "byteOffset": 35232,
+      "componentType": 5126,
+      "count": 281,
+      "max": [
+        0.9192743897438049,
+        0.9992167949676514,
+        0.9764966368675232,
+        1.0
+      ],
+      "min": [
+        -0.9591356515884399,
+        -0.9997687339782715,
+        -0.9979058504104614,
+        -1.0
+      ],
+      "type": "VEC4"
+    },
+    {
+      "bufferView": 1,
+      "byteOffset": 17616,
+      "componentType": 5126,
+      "count": 281,
+      "max": [
+        0.9765075445175171,
+        0.9580491185188293
+      ],
+      "min": [
+        0.016235312446951866,
+        0.1223394125699997
+      ],
+      "type": "VEC2"
+    },
+    {
+      "bufferView": 0,
+      "byteOffset": 46416,
+      "componentType": 5125,
+      "count": 1338,
+      "type": "SCALAR"
+    }
+  ],
+  "asset": {
+    "extras": {
+      "author": "Anthony Schmidt (https://sketchfab.com/risto296)",
+      "license": "CC-BY-NC-4.0 (http://creativecommons.org/licenses/by-nc/4.0/)",
+      "source": "https://sketchfab.com/3d-models/spartan-helmet-f02e2cf48729492c810ff0f5e80ccd21",
+      "title": "Spartan Helmet"
+    },
+    "generator": "Sketchfab-12.66.0",
+    "version": "2.0"
+  },
+  "bufferViews": [
+    {
+      "buffer": 0,
+      "byteLength": 51768,
+      "name": "floatBufferViews",
+      "target": 34963
+    },
+    {
+      "buffer": 0,
+      "byteLength": 19864,
+      "byteOffset": 51768,
+      "byteStride": 8,
+      "name": "floatBufferViews",
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteLength": 59592,
+      "byteOffset": 71632,
+      "byteStride": 12,
+      "name": "floatBufferViews",
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteLength": 39728,
+      "byteOffset": 131224,
+      "byteStride": 16,
+      "name": "floatBufferViews",
+      "target": 34962
+    }
+  ],
+  "buffers": [
+    {
+      "byteLength": 170952,
+      "uri": "scene.bin"
+    }
+  ],
+  "images": [
+    {
+      "uri": "textures/Helmet_baseColor.jpeg"
+    },
+    {
+      "uri": "textures/Helmet_metallicRoughness.png"
+    },
+    {
+      "uri": "textures/Helmet_normal.jpeg"
+    },
+    {
+      "uri": "textures/Hair_baseColor.jpeg"
+    },
+    {
+      "uri": "textures/Hair_metallicRoughness.png"
+    },
+    {
+      "uri": "textures/Hair_normal.jpeg"
+    }
+  ],
+  "materials": [
+    {
+      "doubleSided": true,
+      "name": "Helmet",
+      "normalTexture": {
+        "index": 2
+      },
+      "pbrMetallicRoughness": {
+        "baseColorTexture": {
+          "index": 0
+        },
+        "metallicRoughnessTexture": {
+          "index": 1
+        }
+      }
+    },
+    {
+      "doubleSided": true,
+      "name": "Hair",
+      "normalTexture": {
+        "index": 5,
+        "scale": 0.09
+      },
+      "pbrMetallicRoughness": {
+        "baseColorTexture": {
+          "index": 3
+        },
+        "metallicRoughnessTexture": {
+          "index": 4
+        }
+      }
+    }
+  ],
+  "meshes": [
+    {
+      "name": "300 helm_Helmet_0",
+      "primitives": [
+        {
+          "attributes": {
+            "NORMAL": 1,
+            "POSITION": 0,
+            "TANGENT": 2,
+            "TEXCOORD_0": 3
+          },
+          "indices": 4,
+          "material": 0,
+          "mode": 4
+        }
+      ]
+    },
+    {
+      "name": "Box001_Hair_0",
+      "primitives": [
+        {
+          "attributes": {
+            "NORMAL": 6,
+            "POSITION": 5,
+            "TANGENT": 7,
+            "TEXCOORD_0": 8
+          },
+          "indices": 9,
+          "material": 1,
+          "mode": 4
+        }
+      ]
+    }
+  ],
+  "nodes": [
+    {
+      "children": [
+        1
+      ],
+      "matrix": [
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        2.220446049250313e-16,
+        -1.0,
+        0.0,
+        0.0,
+        1.0,
+        2.220446049250313e-16,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "name": "Sketchfab_model"
+    },
+    {
+      "children": [
+        2
+      ],
+      "matrix": [
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        0.0,
+        -1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "name": "300 helm001.FBX"
+    },
+    {
+      "children": [
+        3,
+        5
+      ],
+      "name": "RootNode"
+    },
+    {
+      "children": [
+        4
+      ],
+      "matrix": [
+        1.1071571037746253e-07,
+        -6.617444900424222e-24,
+        0.9999999999999938,
+        0.0,
+        -6.432230608682409e-08,
+        0.9999999999999979,
+        7.121489815433353e-15,
+        0.0,
+        -0.6795681715011541,
+        -4.371139193416123e-08,
+        7.523887285766418e-08,
+        0.0,
+        9.663381206337363e-10,
+        0.2837104797363281,
+        -0.02210640348494053,
+        1.0
+      ],
+      "name": "300 helm"
+    },
+    {
+      "mesh": 0,
+      "name": "300 helm_Helmet_0"
+    },
+    {
+      "children": [
+        6
+      ],
+      "matrix": [
+        0.5559160709381104,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.07234177011641685,
+        -0.9973799016906364,
+        0.0,
+        0.0,
+        0.9100190601843801,
+        0.0660053301072391,
+        0.0,
+        0.4796299934387207,
+        52.44497299194336,
+        9.014302253723145,
+        1.0
+      ],
+      "name": "Box001"
+    },
+    {
+      "mesh": 1,
+      "name": "Box001_Hair_0"
+    }
+  ],
+  "samplers": [
+    {
+      "magFilter": 9729,
+      "minFilter": 9987,
+      "wrapS": 10497,
+      "wrapT": 10497
+    }
+  ],
+  "scene": 0,
+  "scenes": [
+    {
+      "name": "Sketchfab_Scene",
+      "nodes": [
+        0
+      ]
+    }
+  ],
+  "textures": [
+    {
+      "sampler": 0,
+      "source": 0
+    },
+    {
+      "sampler": 0,
+      "source": 1
+    },
+    {
+      "sampler": 0,
+      "source": 2
+    },
+    {
+      "sampler": 0,
+      "source": 3
+    },
+    {
+      "sampler": 0,
+      "source": 4
+    },
+    {
+      "sampler": 0,
+      "source": 5
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+Model Information:
+* title:	Spartan Helmet
+* source:	https://sketchfab.com/3d-models/spartan-helmet-f02e2cf48729492c810ff0f5e80ccd21
+* author:	Anthony Schmidt (https://sketchfab.com/risto296)
+
+Model License:
+* license type:	CC-BY-NC-4.0 (http://creativecommons.org/licenses/by-nc/4.0/)
+* requirements:	Author must be credited. No commercial use.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Spartan Helmet" (https://sketchfab.com/3d-models/spartan-helmet-f02e2cf48729492c810ff0f5e80ccd21) by Anthony Schmidt (https://sketchfab.com/risto296) licensed under CC-BY-NC-4.0 (http://creativecommons.org/licenses/by-nc/4.0/)

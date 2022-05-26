@@ -31,5 +31,8 @@ class Ui {
 
     startGame = () => {
         document.querySelector('#waitingScreen').style.display = 'none';
+        document.querySelector('#gameData').style.display = 'block';
+        document.querySelector('#playerColor').innerHTML = net.color;
+        document.querySelector('#oponentData').innerHTML = net.secondUsername;
     }
 }
