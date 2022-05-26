@@ -46,12 +46,69 @@ class Game {
         this.camera.position.set(0, 200, 0)
         this.camera.lookAt(this.scene.position);
 
-        this.axes = new THREE.AxesHelper(1000)
         window.addEventListener('resize', this.onWindowResize, false);
-        this.scene.add(this.axes);
         
         this.generateTable(this.tableSize.length, this.tableSize.width, this.tableSize.height); // length, width, height
         this.render()
+
+        this.raycaster = new THREE.Raycaster();
+        this.mouseVector = new THREE.Vector2();
+
+        window.addEventListener("mousedown", (event) => {
+            if (!this.currentTurn) return
+            this.mouseVector.x = (event.clientX / window.innerWidth) * 2 - 1;
+            this.mouseVector.y = -(event.clientY / window.innerHeight) * 2 + 1;
+
+            this.raycaster.setFromCamera(this.mouseVector, this.camera);
+
+            let intersects = this.raycaster.intersectObjects(this.pawns.children);
+            if (intersects.length > 0) {
+                const clickedPawn = intersects[0].object;
+                
+                if (clickedPawn.color == this.color) {   
+                    this.resetSelctedPawn();    
+                    this.selectedPawn = clickedPawn;
+                    this.selectedPawn.material.color.setHex(0xffff00);
+                    this.clearPossibleMoves();
+                    // this.generatePossibleMoves();
+
+                    new TWEEN.Tween(this.selectedPawn.position) // co
+                        .to({ y: 10}, 200) // do jakiej pozycji, w jakim czasie
+                        .easing(TWEEN.Easing.Cubic.In) // typ easingu (zmiana w czasie)
+                        .start()
+                } 
+                return;
+            }
+
+            if(this.selectedPawn == 'none') return;
+
+            intersects = this.raycaster.intersectObjects(this.boardInside.children);
+            if (intersects.length > 0) {
+                const clickedField = intersects[0].object;
+                if (clickedField.color == "black") {
+                    this.clickedField = clickedField;
+                    // this.movePawn();
+                    // this.clearPossibleMoves();
+                }
+            }
+        });
+    }
+
+    resetSelctedPawn = () => {
+        if (this.selectedPawn == 'none') return
+
+        if (this.color == "white") {
+            this.selectedPawn.material.color.set("#ffffff");
+        } else {
+            this.selectedPawn.material.color.set("#444444");
+        }
+
+        new TWEEN.Tween(this.selectedPawn.position) // co
+            .to({ y: 0}, 200) // do jakiej pozycji, w jakim czasie
+            .easing(TWEEN.Easing.Cubic.In) // typ easingu (zmiana w czasie)
+            .start()
+
+        this.selectedPawn = 'none'
     }
 
     generateTable = (length, width, height) => {
@@ -164,6 +221,7 @@ class Game {
 
     generatePawns = async() => {
         this.pawns = new THREE.Object3D();
+        this.pawns.position.set(0, 20, 0)
         this.scene.add(this.pawns);
         let pawn;
         for (let i = 0; i < this.pawnsTab.length; i++) {
@@ -183,7 +241,7 @@ class Game {
                 pawn.position.set(field.position.x, 300, field.position.z);
                 this.pawns.add(pawn)
                 new TWEEN.Tween(pawn.position) // co
-                    .to({ y: 20 }, 1500) // do jakiej pozycji, w jakim czasie
+                    .to({ y: 0 }, 1500) // do jakiej pozycji, w jakim czasie
                     .easing(TWEEN.Easing.Bounce.Out) // typ easingu (zmiana w czasie)
                     // .onComplete(() => { }) // funkcja po zakończeniu animacji
                     .start()
@@ -192,11 +250,16 @@ class Game {
         }
 
         if (this.color == 'black') {
-            // ui.darkOverlay.style.display = "block";
-            // net.startWaitingForMove();
-            // this.currentTurn = false;
+            net.startWaitingForMove();
+            this.currentTurn = false;
         } else {
-            // this.currentTurn = true;
+            this.currentTurn = true;
+        }
+    }
+
+    clearPossibleMoves = () => {
+        for(const field of this.boardInside.children) {
+            if(field.color == 'black') field.material.color.set('#361b01');
         }
     }
 
@@ -214,6 +277,7 @@ class Game {
         TWEEN.update();
         this.camera.updateProjectionMatrix();
 
+        if(this.selectedPawn != 'none') this.selectedPawn.rotation.y += Math.PI/180;
 
         requestAnimationFrame(this.render);
         this.renderer.render(this.scene, this.camera);
