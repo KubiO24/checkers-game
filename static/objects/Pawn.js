@@ -12,6 +12,10 @@ class Pawn extends THREE.Mesh {
             map: new THREE.TextureLoader().load('materials/pawn.png'),
         } );
 
+        this.setColor();
+    }
+
+    setColor = () => {
         if (this.color == "white") {
             this.material.color.set("#ffffff");
         } else if (this.color == "black") {
@@ -19,5 +23,16 @@ class Pawn extends THREE.Mesh {
         } else {
             console.log("WRONG PAWN COLOR")
         }
+    }
+
+    intoQueen = () => {
+        this.isQueen = true;
+    
+        this.material = new THREE.MeshBasicMaterial( {
+            side: THREE.DoubleSide,
+            map: new THREE.TextureLoader().load('materials/queen.png'),
+        } );  
+        this.setColor();
+        this.material.needsUpdate = true;
     }
 }

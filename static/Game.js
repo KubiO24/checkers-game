@@ -71,7 +71,7 @@ class Game {
                 if (clickedPawn.color == this.color) {   
                     this.resetSelctedPawn();    
                     this.selectedPawn = clickedPawn;
-                    this.selectedPawn.material.color.setHex(0xffff00);
+                    this.selectedPawn.material.color.set('#ffff00');
                     this.clearPossibleMoves();
                     this.generatePossibleMoves();
 
@@ -278,7 +278,6 @@ class Game {
     }
 
     generatePossibleMoves = () => {
-        // this.selectedPawn.isQueen = true;
         let maxMove = 1;
 
         let allowedXMove = [1];
@@ -317,7 +316,10 @@ class Game {
 
                     capturedPawn = pawnOnField;
                     pawnsCaptured += 1;
-                    if(pawnsCaptured > 1) pawnsCaptured = 0; 
+                    if(pawnsCaptured > 1) {
+                        pawnsCaptured = 0;
+                        move = 8;
+                    }; 
                 }    
             }
         }
@@ -344,7 +346,7 @@ class Game {
         new TWEEN.Tween(this.selectedPawn.position)
             .to({ x: this.clickedField.position.x, z: this.clickedField.position.z }, 500)
             .easing(TWEEN.Easing.Quadratic.InOut)
-            .onComplete(() => { this.resetSelctedPawn(); setTimeout(this.moveBoard, 200); })
+            .onComplete(() => { this.resetSelctedPawn(); setTimeout(this.moveBoard, 200); this.checkForQueen(); })
             .start()
       
         if(capturedPawn != 'none') {
@@ -379,7 +381,7 @@ class Game {
         new TWEEN.Tween(oponentPawn.position)
             .to({ x: destinationField.position.x, z: destinationField.position.z }, 500)
             .easing(TWEEN.Easing.Quadratic.InOut)
-            .onComplete(() => { setTimeout(this.moveBoard, 200); })
+            .onComplete(() => { setTimeout(this.moveBoard, 200); this.checkForQueen(); })
             .start()
 
         if(move.captured) {          
@@ -395,6 +397,23 @@ class Game {
             this.currentTurn = true;
         }, 1500);
     }
+
+    checkForQueen = () => {
+        console.log('check for queen')
+        let queen = this.pawns.children.find(pawn => pawn.info.x == 7 && pawn.color == 'white' && pawn.isQueen == false );
+        console.log('white: ' + queen)
+
+        if(queen != undefined) {
+            queen.intoQueen();
+        }else {
+            queen = this.pawns.children.find(pawn => pawn.info.x == 0 && pawn.color == 'black' && pawn.isQueen == false );
+            console.log('black: ' + queen)
+
+            if(queen != undefined) {
+                queen.intoQueen();
+            }
+        }      
+    }
     
     moveBoard = () => { 
         let x = -this.boardAndPawns.position.x;
@@ -402,7 +421,6 @@ class Game {
         new TWEEN.Tween(this.boardAndPawns.position)
             .to({ x: x }, 1000)
             .easing(TWEEN.Easing.Quadratic.InOut)
-            .onComplete(() => {})
             .start()
     }
 
