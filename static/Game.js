@@ -70,7 +70,7 @@ class Game {
                     this.selectedPawn = clickedPawn;
                     this.selectedPawn.material.color.setHex(0xffff00);
                     this.clearPossibleMoves();
-                    // this.generatePossibleMoves();
+                    this.generatePossibleMoves();
 
                     new TWEEN.Tween(this.selectedPawn.position) // co
                         .to({ y: 10}, 200) // do jakiej pozycji, w jakim czasie
@@ -85,10 +85,10 @@ class Game {
             intersects = this.raycaster.intersectObjects(this.boardInside.children);
             if (intersects.length > 0) {
                 const clickedField = intersects[0].object;
-                if (clickedField.color == "black") {
+                if (clickedField.possibleMove) {
                     this.clickedField = clickedField;
-                    // this.movePawn();
-                    // this.clearPossibleMoves();
+                    this.clearPossibleMoves();
+                    this.movePlayerPawn();
                 }
             }
         });
@@ -259,8 +259,71 @@ class Game {
 
     clearPossibleMoves = () => {
         for(const field of this.boardInside.children) {
-            if(field.color == 'black') field.material.color.set('#361b01');
+            if(field.color == 'black') {
+                field.material.color.set('#361b01')
+                field.possibleMove = false;
+            }
         }
+    }
+
+    generatePossibleMoves = () => {
+        // this.selectedPawn.isQueen = true;
+        let maxMove = 1;
+
+        let allowedXMove = [1];
+        if (this.color == 'black') allowedXMove = [-1];
+        if(this.selectedPawn.isQueen) {
+            maxMove = 7;
+            allowedXMove = [-1, 1];
+        }
+
+        let allowedZMove = [-1, 1];
+
+        let pawnX = this.selectedPawn.info.x;
+        let panwZ = this.selectedPawn.info.z;
+
+        for(const x of allowedXMove) {
+            for(const z of allowedZMove) {
+                for(let move=1; move<=maxMove; move++) {
+                    let xMove = x * move;
+                    let zMove = z * move;
+
+                    let field = this.boardInside.children.find(field => field.info.x == pawnX + xMove && field.info.z == panwZ + zMove);
+                    if(field == undefined) continue;
+                    let pawnOnField = this.pawns.children.find(pawn => pawn.info.x == field.info.x && pawn.info.z == field.info.z);
+
+                    if (pawnOnField == undefined) {
+                        field.material.color.set('#00ff00');
+                        field.possibleMove = true;
+                        continue;
+                    }
+
+                    if(pawnOnField.color == this.color) {
+                        move = 8;
+                        continue;
+                    }
+                }    
+            }
+        }
+    }
+
+    movePlayerPawn = () => {
+        let color;
+        if (this.color == 'white') color = 1;
+        if (this.color == 'black') color = 2;
+
+        this.pawnsTab[this.selectedPawn.info.x, this.selectedPawn.info.z] = 0;
+        this.pawnsTab[this.clickedField.position.x, this.clickedField.position.z] = color;
+
+        this.selectedPawn.info.x = this.clickedField.info.x;
+        this.selectedPawn.info.z = this.clickedField.info.z;
+
+        new TWEEN.Tween(this.selectedPawn.position) // co
+            .to({ x: this.clickedField.position.x, z: this.clickedField.position.z }, 500) // do jakiej pozycji, w jakim czasie
+            .easing(TWEEN.Easing.Quadratic.InOut) // typ easingu (zmiana w czasie)
+            .onUpdate(() => {  })
+            .onComplete(() => { this.resetSelctedPawn() }) // funkcja po zakończeniu animacji
+            .start()
     }
 
     sleep = (ms) => {

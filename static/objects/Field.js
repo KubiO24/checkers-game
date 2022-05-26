@@ -5,6 +5,9 @@ class Field extends THREE.Mesh {
         this.typeOf = "field";
         this.geometry = new THREE.BoxGeometry(fieldSize, 10, fieldSize);
         this.color = color
+        this.possibleMove = false;
+
+
         this.material = new THREE.MeshBasicMaterial( {
             side: THREE.DoubleSide,
             map: new THREE.TextureLoader().load('materials/field.jpg'),

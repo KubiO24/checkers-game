@@ -4,6 +4,7 @@ class Pawn extends THREE.Mesh {
 
         this.typeOf = "pawn"
         this.color = color;
+        this.isQueen = false;
 
         this.geometry = new THREE.CylinderGeometry(pawnRadius, pawnRadius, 4, 32);
         this.material = new THREE.MeshBasicMaterial( {
