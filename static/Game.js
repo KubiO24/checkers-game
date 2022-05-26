@@ -6,6 +6,7 @@ class Game {
         this.fieldSize = 32;
         this.pawnRadius = this.fieldSize / 3;
         this.tableSize = {length: 450, width: 30, height: 10}
+        this.boardAndPawns = new THREE.Object3D();
 
         // white - 0 | black - 2
         this.checkboard = [
@@ -41,6 +42,8 @@ class Game {
         const loader = new THREE.TextureLoader();
         const bgTexture = loader.load('./materials/skybox.jpg');
         this.scene.background = bgTexture;
+
+        this.scene.add(this.boardAndPawns);
 
         this.camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 10000);
         this.camera.position.set(0, 200, 0)
@@ -209,7 +212,7 @@ class Game {
         const boardOutside = new THREE.Mesh( geometry, material );
         this.board.add(boardOutside)
 
-        this.scene.add(this.board);
+        this.boardAndPawns.add(this.board);
         this.board.position.set(0, 300 ,0)
 
         new TWEEN.Tween(this.board.position) // co
@@ -222,7 +225,7 @@ class Game {
     generatePawns = async() => {
         this.pawns = new THREE.Object3D();
         this.pawns.position.set(0, 20, 0)
-        this.scene.add(this.pawns);
+        this.boardAndPawns.add(this.pawns);
         let pawn;
         for (let i = 0; i < this.pawnsTab.length; i++) {
             for (let j = 0; j < this.pawnsTab[0].length; j++) {
@@ -249,12 +252,20 @@ class Game {
             }
         }
 
-        if (this.color == 'black') {
-            net.startWaitingForMove();
-            this.currentTurn = false;
-        } else {
-            this.currentTurn = true;
-        }
+        await this.sleep(1500);
+
+        new TWEEN.Tween(this.boardAndPawns.position)
+            .to({ x: -50 }, 1000)
+            .easing(TWEEN.Easing.Quadratic.InOut)
+            .onComplete(() => {
+                if (this.color == 'black') {
+                    net.startWaitingForMove();
+                    this.currentTurn = false;
+                } else {
+                    this.currentTurn = true;
+                }
+             })
+            .start()
     }
 
     clearPossibleMoves = () => {
@@ -279,38 +290,50 @@ class Game {
 
         let allowedZMove = [-1, 1];
 
-        let pawnX = this.selectedPawn.info.x;
-        let panwZ = this.selectedPawn.info.z;
-
         for(const x of allowedXMove) {
             for(const z of allowedZMove) {
-                for(let move=1; move<=maxMove; move++) {
+                let pawnsCaptured = 0;
+                let capturedPawn = 'none';
+                for(let move=1; move<=maxMove+pawnsCaptured; move++) {
+                    console.log("LOL")
                     let xMove = x * move;
                     let zMove = z * move;
 
-                    let field = this.boardInside.children.find(field => field.info.x == pawnX + xMove && field.info.z == panwZ + zMove);
+                    let field = this.boardInside.children.find(field => field.info.x == this.selectedPawn.info.x + xMove && field.info.z == this.selectedPawn.info.z + zMove);
                     if(field == undefined) continue;
                     let pawnOnField = this.pawns.children.find(pawn => pawn.info.x == field.info.x && pawn.info.z == field.info.z);
 
                     if (pawnOnField == undefined) {
                         field.material.color.set('#00ff00');
                         field.possibleMove = true;
+                        field.capturedPawn = capturedPawn;
                         continue;
-                    }
+                    }            
 
                     if(pawnOnField.color == this.color) {
                         move = 8;
                         continue;
                     }
+
+                    capturedPawn = pawnOnField;
+                    pawnsCaptured += 1;
+                    if(pawnsCaptured > 1) pawnsCaptured = 0; 
                 }    
             }
         }
     }
 
     movePlayerPawn = () => {
+        this.currentTurn = false;
+        let captured = false;
+        const capturedPawn = this.clickedField.capturedPawn
+
         let color;
         if (this.color == 'white') color = 1;
         if (this.color == 'black') color = 2;
+
+        let pawnX = this.selectedPawn.info.x;
+        let pawnZ = this.selectedPawn.info.z;
 
         this.pawnsTab[this.selectedPawn.info.x, this.selectedPawn.info.z] = 0;
         this.pawnsTab[this.clickedField.position.x, this.clickedField.position.z] = color;
@@ -318,11 +341,68 @@ class Game {
         this.selectedPawn.info.x = this.clickedField.info.x;
         this.selectedPawn.info.z = this.clickedField.info.z;
 
-        new TWEEN.Tween(this.selectedPawn.position) // co
-            .to({ x: this.clickedField.position.x, z: this.clickedField.position.z }, 500) // do jakiej pozycji, w jakim czasie
-            .easing(TWEEN.Easing.Quadratic.InOut) // typ easingu (zmiana w czasie)
-            .onUpdate(() => {  })
-            .onComplete(() => { this.resetSelctedPawn() }) // funkcja po zakończeniu animacji
+        new TWEEN.Tween(this.selectedPawn.position)
+            .to({ x: this.clickedField.position.x, z: this.clickedField.position.z }, 500)
+            .easing(TWEEN.Easing.Quadratic.InOut)
+            .onComplete(() => { this.resetSelctedPawn(); setTimeout(this.moveBoard, 200); })
+            .start()
+      
+        if(capturedPawn != 'none') {
+            captured = true;
+            setTimeout(() => {
+                this.pawns.remove(capturedPawn);
+            }, 250);
+        }
+
+        net.moveDone({
+            'last': [pawnX, pawnZ],
+            'new': [ this.selectedPawn.info.x, this.selectedPawn.info.z],
+            'captured': captured,
+            'capturedPawn': capturedPawn.info
+        })
+    }
+
+    moveOponentPawn = (move) => {    
+        let color;
+        if (this.color == 'white') color = 2;
+        if (this.color == 'black') color = 1;
+        
+        this.pawnsTab[move.last[0], move.last[1]] = 0;
+        this.pawnsTab[move.new[0], move.new[1]] = color;
+
+        const oponentPawn = this.pawns.children.find(pawn => pawn.info.x == move.last[0] && pawn.info.z == move.last[1]);
+        const destinationField = this.boardInside.children.find(field => field.info.x == move.new[0] && field.info.z == move.new[1]);
+        
+        oponentPawn.info.x = move.new[0];
+        oponentPawn.info.z = move.new[1];
+
+        new TWEEN.Tween(oponentPawn.position)
+            .to({ x: destinationField.position.x, z: destinationField.position.z }, 500)
+            .easing(TWEEN.Easing.Quadratic.InOut)
+            .onComplete(() => { setTimeout(this.moveBoard, 200); })
+            .start()
+
+        if(move.captured) {          
+            setTimeout(() => {
+                let pawnToCapture = this.pawns.children.find(pawn => pawn.info.x == move.capturedPawn.x && pawn.info.z == move.capturedPawn.z);
+                this.pawnsTab[move.capturedPawn.x, move.capturedPawn.z] = 0; 
+                this.pawns.remove(pawnToCapture);
+            }, 250);
+        }
+        
+
+        setTimeout(() => {
+            this.currentTurn = true;
+        }, 1500);
+    }
+    
+    moveBoard = () => { 
+        let x = -this.boardAndPawns.position.x;
+
+        new TWEEN.Tween(this.boardAndPawns.position)
+            .to({ x: x }, 1000)
+            .easing(TWEEN.Easing.Quadratic.InOut)
+            .onComplete(() => {})
             .start()
     }
 

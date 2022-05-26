@@ -54,6 +54,49 @@ class Net {
             )
     }
 
+    startWaitingForMove = () => {
+        this.waitingForMoveInterval = setInterval(this.waitingForMove, 100);
+    }
+
+    waitingForMove = () => {
+        console.log("WAIT for move")
+        const body = JSON.stringify({
+            color: this.color
+        })
+
+        const headers = { "Content-Type": "application/json" }
+
+        fetch("/waitForMove", { method: "post", body, headers })
+            .then(response => response.json())
+            .then(
+                data => {
+                    if (data.moved == 'true') {
+                        clearInterval(this.waitingForMoveInterval);
+                        game.moveOponentPawn(data.move.move)
+                    }
+                }
+            )
+    }
+    
+    moveDone = (move) => {
+        const body = JSON.stringify({
+            move: move,
+            colorMoved: this.color
+        })
+
+        const headers = { "Content-Type": "application/json" }
+
+        fetch("/moveDone", { method: "post", body, headers })
+            .then(response => response.text())
+            .then(
+                data => {
+                    if (data == 'success') {
+                        setTimeout(this.startWaitingForMove, 1500)
+                    } 
+                }
+            )
+    }
+
     resetUsers = () => {
         fetch("/resetUsers", { method: "post" })
     }

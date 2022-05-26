@@ -7,6 +7,7 @@ app.use(express.json());
 app.use(express.static('static'))
 
 let users = [];
+let moveData = [];
 
 app.get("/", function (req, res) {
     res.sendFile(path.join(__dirname + "/static/index.html"))
@@ -55,6 +56,30 @@ app.post('/getUsernamesList', function (req, res) {
 
 app.post('/resetUsers', function (req, res) {
     users = [];
+});
+
+app.post('/moveDone', function (req, res) {
+    res.setHeader('content-type', 'application/json');
+
+    moveData = req.body;
+    res.send('success')
+});
+
+app.post('/waitForMove', function (req, res) {
+    res.setHeader('content-type', 'application/json');
+    if (moveData.length != 0) {
+        if(req.body.color == moveData.colorMoved) return;
+        
+        res.send({
+            'moved': 'true',
+            'move': moveData
+        })
+        moveData = [];
+    } else {
+        res.send({
+            'moved': 'false'
+        })
+    }
 });
 
 // module.exports = app;
