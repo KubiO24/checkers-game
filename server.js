@@ -1,6 +1,6 @@
 var express = require("express");
 var app = express();
-var PORT = 3000;
+var PORT = process.env.PORT || 3000;
 var path = require("path");
 
 app.use(express.json());
@@ -80,9 +80,7 @@ app.post('/waitForMove', function (req, res) {
             'moved': 'false'
         })
     }
-});
-
-// module.exports = app;
+});s
 
 app.listen(PORT, function () {
     console.log("http://localhost:" + PORT);
