@@ -80,7 +80,7 @@ app.post('/waitForMove', function (req, res) {
             'moved': 'false'
         })
     }
-});s
+});
 
 app.listen(PORT, function () {
     console.log("http://localhost:" + PORT);
