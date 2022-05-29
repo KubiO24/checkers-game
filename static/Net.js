@@ -56,10 +56,15 @@ class Net {
 
     startWaitingForMove = () => {
         this.waitingForMoveInterval = setInterval(this.waitingForMove, 100);
+        this.startTimer();
     }
 
     waitingForMove = () => {
-        console.log("WAIT for move")
+        if(game.gameEnded) {
+            clearInterval(this.waitingForMoveInterval);
+            return;
+        }
+
         const body = JSON.stringify({
             color: this.color
         })
@@ -73,9 +78,34 @@ class Net {
                     if (data.moved == 'true') {
                         clearInterval(this.waitingForMoveInterval);
                         game.moveOponentPawn(data.move.move)
+                        clearInterval(this.timerInterval);
+                        setTimeout(this.startTimer, 1500);
                     }
                 }
             )
+    }
+
+    startTimer = () => {
+        this.timeForMove = 30;
+        document.querySelector('#timeForMove').innerHTML = this.timeForMove;
+        this.timerInterval = setInterval(this.timer, 1000);
+    }
+
+    timer = () => {
+        this.timeForMove -= 1;
+
+        if(this.timeForMove >= 0) {
+            document.querySelector('#timeForMove').innerHTML = this.timeForMove;
+        }
+
+        if(this.timeForMove == -1) {
+            clearInterval(this.timerInterval);
+            if(game.currentTurn) {
+                ui.endGame('lose');
+            }else {
+                ui.endGame('win');
+            }
+        }
     }
     
     moveDone = (move) => {
@@ -91,6 +121,7 @@ class Net {
             .then(
                 data => {
                     if (data == 'success') {
+                        clearInterval(this.timerInterval);
                         setTimeout(this.startWaitingForMove, 1500)
                     } 
                 }

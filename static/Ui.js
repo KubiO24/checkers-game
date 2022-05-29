@@ -36,4 +36,17 @@ class Ui {
         document.querySelector('#playerColor').innerHTML = net.color;
         document.querySelector('#oponentUsername').innerHTML = net.secondUsername;
     }
+
+    endGame = (result) => {
+        game.gameEnded = true;
+        document.querySelector('#endGame').style.display = 'flex';
+        if(result == 'win') {
+            document.querySelector('#endGameText').style.color = 'limegreen';
+            document.querySelector('#endGameText').innerHTML = 'You Won!'
+        }else {
+            document.querySelector('#endGameText').style.color = 'crimson';
+            document.querySelector('#endGameText').innerHTML = 'You Lost!'
+        }
+        net.resetUsers();   
+    }
 }

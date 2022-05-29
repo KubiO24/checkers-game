@@ -7,6 +7,7 @@ class Game {
         this.pawnRadius = this.fieldSize / 3;
         this.tableSize = {length: 450, width: 30, height: 10}
         this.boardAndPawns = new THREE.Object3D();
+        this.gameEnded = false;
 
         // white - 0 | black - 2
         this.checkboard = [
@@ -58,6 +59,7 @@ class Game {
         this.mouseVector = new THREE.Vector2();
 
         window.addEventListener("mousedown", (event) => {
+            if(this.gameEnded) return;
             if (!this.currentTurn) return
             this.mouseVector.x = (event.clientX / window.innerWidth) * 2 - 1;
             this.mouseVector.y = -(event.clientY / window.innerHeight) * 2 + 1;
@@ -263,6 +265,7 @@ class Game {
                     this.currentTurn = false;
                 } else {
                     this.currentTurn = true;
+                    net.startTimer();
                 }
              })
             .start()
@@ -294,7 +297,6 @@ class Game {
                 let pawnsCaptured = 0;
                 let capturedPawn = 'none';
                 for(let move=1; move<=maxMove+pawnsCaptured; move++) {
-                    console.log("LOL")
                     let xMove = x * move;
                     let zMove = z * move;
 
@@ -346,7 +348,7 @@ class Game {
         new TWEEN.Tween(this.selectedPawn.position)
             .to({ x: this.clickedField.position.x, z: this.clickedField.position.z }, 500)
             .easing(TWEEN.Easing.Quadratic.InOut)
-            .onComplete(() => { this.resetSelctedPawn(); setTimeout(this.moveBoard, 200); this.checkForQueen(); })
+            .onComplete(() => { this.resetSelctedPawn(); setTimeout(this.moveBoard, 200); this.checkForQueen(); setTimeout(this.checkForWin, 500) })
             .start()
       
         if(capturedPawn != 'none') {
@@ -381,7 +383,7 @@ class Game {
         new TWEEN.Tween(oponentPawn.position)
             .to({ x: destinationField.position.x, z: destinationField.position.z }, 500)
             .easing(TWEEN.Easing.Quadratic.InOut)
-            .onComplete(() => { setTimeout(this.moveBoard, 200); this.checkForQueen(); })
+            .onComplete(() => { setTimeout(this.moveBoard, 200); this.checkForQueen(); setTimeout(this.checkForWin, 500) })
             .start()
 
         if(move.captured) {          
@@ -398,16 +400,35 @@ class Game {
         }, 1500);
     }
 
+    checkForWin = () => {
+        let oponentPawn;
+
+        if(this.color == 'white') {
+            oponentPawn = 'black'
+        }else {
+            oponentPawn = 'white';
+        }
+
+        let pawn = this.pawns.children.find(pawn => pawn.color == this.color )
+        if(pawn == undefined) {
+            ui.endGame('lose')
+            return
+        }
+
+        pawn = this.pawns.children.find(pawn => pawn.color == oponentPawn );
+        if(pawn == undefined) {
+            ui.endGame('win')
+            return
+        }
+    }
+
     checkForQueen = () => {
-        console.log('check for queen')
         let queen = this.pawns.children.find(pawn => pawn.info.x == 7 && pawn.color == 'white' && pawn.isQueen == false );
-        console.log('white: ' + queen)
 
         if(queen != undefined) {
             queen.intoQueen();
         }else {
             queen = this.pawns.children.find(pawn => pawn.info.x == 0 && pawn.color == 'black' && pawn.isQueen == false );
-            console.log('black: ' + queen)
 
             if(queen != undefined) {
                 queen.intoQueen();
@@ -443,5 +464,4 @@ class Game {
         requestAnimationFrame(this.render);
         this.renderer.render(this.scene, this.camera);
     }
-
 }

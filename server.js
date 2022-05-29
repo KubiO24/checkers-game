@@ -85,5 +85,5 @@ app.post('/waitForMove', function (req, res) {
 // module.exports = app;
 
 app.listen(PORT, function () {
-    console.log("Start serwera na porcie - " + PORT);
+    console.log("http://localhost:" + PORT);
 });
