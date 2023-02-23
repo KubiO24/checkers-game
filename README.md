@@ -1,2 +1,2 @@
-# Checkers-Game
-### Preview: https://jakubkowal-checkers.herokuapp.com/
+# Checkers game
+Multiplayer checkers game made with ThreeJS and Express
